@@ -20,33 +20,36 @@ if (!BPC) {
     * Document ready event handler (jQuery style)
     */
     $(document).ready(function() {
-        FHIR.oauth2.ready(function(smart){
-            window.smart = smart;
 
-            if ( typeof FHIR === "undefined" ) {
-                $("#info").text("Error: SMART Connect interface not found");
-            } else {
-                var hidePatientHeader = (smart.tokenResponse.need_patient_banner === false);
-                BPC.settings.hide_patient_header = hidePatientHeader;
+
+        FHIR.oauth2.ready().then(
+            function(client){
+            
+                BPC.settings.hide_patient_header = (client.state.tokenResponse.need_patient_banner === false);
 
                 // Fire up the SMART API calls and initialize the application asynchronously
-                $.when(BPC.get_demographics(), BPC.get_vitals())
-                 .then( function (demographics, vitals) {
-                        BPC.initApp ( BPC.processData(demographics, vitals) );
-                        BPC.vitals = vitals;
-                        BPC.demographics = demographics;
-                    },
-                    function (message) {
-                        BPC.displayError (message.data || message);
-                    });
+                return Promise.all([
+                    BPC.get_demographics(client),
+                    BPC.get_vitals(client)
+                ]).then(function(result) {
+                    BPC.initApp ( BPC.processData(result[0], result[1]));
+                    BPC.vitals = result[1];
+                    BPC.demographics = result[0];
+                });
             }
-
-            // Add other things to do upon document loading here...
-
-        },
-        function () {
-            BPC.initApp ( BPC.getSamplePatient(), true );
-        }); // end document.ready handler
+        ).catch(
+            function(error) {
+                console.error(error);
+                BPC.displayError(
+                    "An error prevented the app from launching properly. " +
+                    "For details see the browser console. " +
+                    "Proceeding with a sample patient in 10 seconds..."
+                );
+                setTimeout(function() {
+                    BPC.initApp(BPC.getSamplePatient(), true);
+                }, 10000);
+            }
+        );
     });
 
     /**

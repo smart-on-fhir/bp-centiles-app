@@ -1,33 +1,28 @@
 (function(){
   FhirLoader = {};
 
-  FhirLoader.demographics = function() {
-    var dfd = $.Deferred();
-
-    smart.patient.read().done(function(pt) {
+  FhirLoader.demographics = function(client) {
+    
+    return client.patient.read().then(function(pt) {
       var name = pt.name[0].given.join(" ") +" "+ pt.name[0].family.join(" ");
       var birthday = new Date(pt.birthDate).toISOString();
       var gender = pt.gender;
 
-      dfd.resolve({
+      return {
         name: name,
         gender: gender,
         birthday: birthday
-      });
-
-    }).fail(function(e) {
-      dfd.reject(e.message || e);
+      };
     });
-
-    return dfd.promise();
   };
 
-  FhirLoader.vitals = function() {
-    var dfd = $.Deferred();
-    $.when(getObservations(),getEncounters()).then(function(observations,encounters) {
-        dfd.resolve(processObservations(observations,encounters));
+  FhirLoader.vitals = function(client) {
+    return Promise.all([
+      getObservations(client),
+      getEncounters(client)
+    ]).then(function(result) {
+        return processObservations(result[0], result[1], client);
     });
-    return dfd.promise();
   }
   
 
@@ -43,16 +38,16 @@
   }
 
 
-  function processObservations(observations, encounters){
+  function processObservations(observations, encounters, client) {
 
     var vitals = {heightData: [], bpData: []};
 
-    var vitalsByCode = smart.byCode(observations, 'code');
+    var vitalsByCode = client.byCode(observations, 'code');
 
     (vitalsByCode['8302-2']||[]).forEach(function(v){
       vitals.heightData.push({
         vital_date: v.effectiveDateTime,
-        height: smart.units.cm(v.valueQuantity)
+        height: client.units.cm(v.valueQuantity)
       }); 
     });
 
@@ -114,26 +109,14 @@
     return vitals;
   };
 
-  function getObservations(){
-        return smart.patient.api.fetchAll({type: "Observation", query: {code: {$or: ['http://loinc.org|8302-2','http://loinc.org|55284-4']}}});
-        
+  function getObservations(client) {
+    var query = new URLSearchParams();
+    query.set("code", ["http://loinc.org|8302-2","http://loinc.org|55284-4"].join(","));
+    return client.patient.request("Observation?" + query, { flat: true });
   };
 
-  function defaultOnFail(promise, defaultValue) {
-      var deferred = $.Deferred();
-      $.when(promise).then(
-          function (data) {
-            deferred.resolve(data);
-          },
-          function () {
-            deferred.resolve(defaultValue);
-          }
-      );
-      return deferred.promise();
-  };
-  
-  function getEncounters(){
-        return defaultOnFail(smart.patient.api.fetchAll({type: "Encounter"}),[]);
+  function getEncounters(client) {
+    return client.patient.request("Encounter", { flat: true });
   };
 
 })();
