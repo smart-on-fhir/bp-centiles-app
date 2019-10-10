@@ -191,15 +191,15 @@ if (!BPC) {
     * @returns {Object} Patient object
     */
     BPC.getSamplePatient = function () {
-        var patient = new BPC.Patient("Sample Patient", "1994-03-27", "female", "1234567");
+        var patient = new BPC.Patient("Sample Patient", "2004-03-27", "female", "1234567");
         patient.data = [
-            {timestamp: "1998-04-01T04:32:00Z", height: 85, systolic: 98, diastolic: 73, site: "Arm", position: "Standing", method: "Auscultation", encounter: "Inpatient"},
-            {timestamp: "1999-05-25T06:21:00Z", height: 96, systolic: 82, diastolic: 53, site: "Leg", position: "Sitting", method: "Auscultation", encounter: "Ambulatory"},
-            {timestamp: "2000-01-12T15:30:00Z", height: 116, systolic: 84, diastolic: 48, site: "Arm", position: "Sitting", method: "Auscultation", encounter: "Ambulatory"},
-            {timestamp: "2000-04-24T19:13:00Z", height: 118, systolic: 104, diastolic: 52, site: "Leg", position: "Sitting", method: "Auscultation", encounter: "Ambulatory"},
-            {timestamp: "2001-06-30T08:43:00Z", height: 125, systolic: 107, diastolic: 75, site: "Arm", position: "Standing", method: "Machine", encounter: "Inpatient"},
-            {timestamp: "2007-12-04T14:07:00Z", height: 175, systolic: 118, diastolic: 66, site: "Leg", position: "Sitting", method: "Machine", encounter: "Inpatient"},
-            {timestamp: "2011-08-26T10:24:00Z", height: 182, systolic: 109, diastolic: 74, site: "Leg", position: "Standing", method: "Machine", encounter: "Inpatient"}
+            {timestamp: "2008-04-01T04:32:00Z", height: 85, systolic: 98, diastolic: 73, site: "Arm", position: "Standing", method: "Auscultation", encounter: "Inpatient"},
+            {timestamp: "2009-05-25T06:21:00Z", height: 96, systolic: 82, diastolic: 53, site: "Leg", position: "Sitting", method: "Auscultation", encounter: "Ambulatory"},
+            {timestamp: "2010-01-12T15:30:00Z", height: 116, systolic: 84, diastolic: 48, site: "Arm", position: "Sitting", method: "Auscultation", encounter: "Ambulatory"},
+            {timestamp: "2010-04-24T19:13:00Z", height: 118, systolic: 104, diastolic: 52, site: "Leg", position: "Sitting", method: "Auscultation", encounter: "Ambulatory"},
+            {timestamp: "2011-06-30T08:43:00Z", height: 125, systolic: 107, diastolic: 75, site: "Arm", position: "Standing", method: "Machine", encounter: "Inpatient"},
+            {timestamp: "2017-12-04T14:07:00Z", height: 175, systolic: 118, diastolic: 66, site: "Leg", position: "Sitting", method: "Machine", encounter: "Inpatient"},
+            {timestamp: "2018-08-26T10:24:00Z", height: 182, systolic: 109, diastolic: 74, site: "Leg", position: "Standing", method: "Machine", encounter: "Inpatient"}
         ];
         /*
         patient.data = [
