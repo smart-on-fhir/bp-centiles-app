@@ -12,7 +12,7 @@
 //    TO DO:
 //       [ ] improve height interpolation algorithm
 
-// Initialize the BPC global obeject as needed
+// Initialize the BPC global object as needed
 var BPC;
 if (!BPC) {
     BPC = {};
@@ -418,7 +418,7 @@ if (!BPC) {
     BPC.MIXED = 2;
 
     /**
-    * Retruns the type of the patient based on the readings (PEDIATRIC, ADULT, or MIXED)
+    * Returns the type of the patient based on the readings (PEDIATRIC, ADULT, or MIXED)
     *
     * @param {Function} filter The filter method to apply
     *
